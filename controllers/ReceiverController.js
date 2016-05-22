@@ -16,17 +16,19 @@ function ReceiverController(RequestModel) {
 }
 
 ReceiverController.prototype.insertRequest = function(request, response, next) {
-  var requestData = request.body.requestData;
-  this.model.createAsync(requestData)
-    .then(function(err, data) {
-      if(!err){
-        response.json({resposta:err});
-      }else{
-        response.json({resposta:"OK"})
+  var requestData = request.body;
+  var token = requestData[requestData.length -1].value;
 
-      }
-    })
-    .catch(next);
+ this.model.createAsync(requestData,token)
+ .then(function(err, data) {
+   if(!err){
+     response.json({resposta:err});
+    }else{
+     response.json({resposta:"OK"})
+    }
+  })
+  .catch(next);
+
 };
 
 

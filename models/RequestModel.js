@@ -2,11 +2,14 @@
 function RequestDAO(model) {
   this.model = model;
 }
-RequestDAO.prototype.create = function(data, callback) {
-  var model = new this.model(data);
-  model.save(function(err, result) {
-    callback(err, result);
-  });
+RequestDAO.prototype.create = function(data,token, callback) {
+  for (var i = 0 ; i < data.length ; i++){
+      data[i].token = token;
+  }
+  var model = new this.model(data[i]);
+        model.save(function(err, result) {
+          callback(err, result);
+        });
 };
 RequestDAO.prototype.find = function(query, callback) {
   this.model.find(query).exec(callback);
@@ -40,17 +43,22 @@ RequestDAO.prototype.remove = function(_id, callback) {
 };
 
 module.exports = function(mongoose) {
-  var Request = mongoose.model('Request', {
-        hora : String,
-        dataInsert : { type: Date, default: Date.now },
-        dia : String,
-        ipSrc : String,
-        ipDest : String,
-        method : String,
-        url : String,
-        length : Number,
-        token : String,
+  var Pacote = new mongoose.Schema([{
+          hora : String,
+          dataInsert : { type: Date, default: Date.now },
+          dia : String,
+          ipSrc : String,
+          ipDest : String,
+          method : String,
+          url : {s:String,origin:String,length:Number},
+          length : Number,
+          token : String,
+    }]);
 
-  });
+  var Request = mongoose.model('Request',Pacote);
+
+
+
+
   return new RequestDAO(Request);
 };
