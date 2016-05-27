@@ -16,6 +16,7 @@ var cons = require('consolidate');
     app.use(bodyParser.urlencoded({ extended: true }));
 
     app.use(function (request, response, next) {
+      response.header("Access-Control-Allow-Origin", "localhost");
       if (request.url === '/favicon.ico') {
         response.writeHead(200, {'Content-Type': 'image/x-icon'});
         response.end('');
